@@ -1,0 +1,29 @@
+version: '3.4'
+services:
+    web:
+        build:
+            context: ./docker/nginx
+            dockerfile: Dockerfile
+        volumes:
+            - .:/var/www/laravel
+        ports:
+            - "80:80"
+        links:
+            - app
+    app:
+        build:
+            context: ./docker/php
+            dockerfile: Dockerfile
+        volumes:
+            - .:/var/www/laravel
+            - ./.env:/var/www/laravel/.env
+    mysql:
+        restart: always
+        image: mysql:latest
+        volumes:
+            - /home/ec2-user/mysql:/var/lib/mysql
+        environment:
+            - "MYSQL_ROOT_PASSWORD=secret"
+            - "MYSQL_DATABASE=stylebdev"
+        ports:
+            - 3306:3306
